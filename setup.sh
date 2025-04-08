@@ -116,7 +116,7 @@ app.listen(PORT, () => {
 EOF
 
 # ==== docker-compose.yml ====
-cat <<EOF > project/docker-compose.yml
+cat <<EOF > docker-compose.yml
 version: '3.8'
 
 services:
@@ -160,8 +160,8 @@ EOF
 
 # ==== Final Output ====
 echo
-echo "✅ Project structure created in ./project/"
-echo "🚀 Ready to run: cd project && docker-compose up -d"
+echo "✅ Project structure created in $(pwd)"
+echo "🚀 Ready to run"
 echo
 echo "🟢 Generated Credentials:"
 echo "--------------------------------------"
@@ -177,5 +177,5 @@ echo "--------------------------------------"
 echo "⚠️  Please copy and store these credentials before continuing!"
 echo
 read -p "Press enter to continue running the docker container"
-docker-compose build
-docker-compose up -d
+docker-compose build && docker-compose up -d
+
