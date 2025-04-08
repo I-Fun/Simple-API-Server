@@ -9,6 +9,8 @@ generate_random() {
 read -p "Postgres username [default: random]: " PGUSER
 read -p "Postgres password [default: random]: " PGPASSWORD
 read -p "Postgres database [default: random]: " PGDATABASE
+read -p "PGADMIN Email [default: admin@example.com]: " PGADMIN_DEFAULT_EMAIL
+read -p "PGADMIN Password [default: random]: " PGADMIN_DEFAULT_PASSWORD
 read -p "API username [default: random]: " API_USER
 read -p "API password [default: random]: " API_PASS
 read -p "API exposed port [default: 3000]: " API_PORT
@@ -16,12 +18,14 @@ read -p "API exposed port [default: 3000]: " API_PORT
 PGUSER=${PGUSER:-$(generate_random)}
 PGPASSWORD=${PGPASSWORD:-$(generate_random)}
 PGDATABASE=${PGDATABASE:-$(generate_random)}
+PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL:-admin@example.com}
+PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD:-$(generate_random)}
 API_USER=${API_USER:-$(generate_random)}
 API_PASS=${API_PASS:-$(generate_random)}
 API_PORT=${API_PORT:-3000}
 
 # ==== Directory Setup ====
-mkdir -p project/api
+mkdir -p api
 
 # ==== .env ====
 cat <<EOF > api/.env
@@ -134,10 +138,10 @@ services:
     container_name: pgadmin
     restart: unless-stopped
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@example.com
-      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_DEFAULT_EMAIL: $PGADMIN_DEFAULT_EMAIL
+      PGADMIN_DEFAULT_PASSWORD: $PGADMIN_DEFAULT_PASSWORD
     ports:
-      - "8080:80"
+      - "3001:80"
     depends_on:
       - postgres
 
@@ -170,3 +174,6 @@ echo "API Exposed Port:    $API_PORT"
 echo "--------------------------------------"
 echo "⚠️  Please copy and store these credentials before continuing!"
 echo
+read -p "Press enter to continue running the docker container"
+docker-compose build
+docker-compose up -d
