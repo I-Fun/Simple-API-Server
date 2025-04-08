@@ -6,6 +6,9 @@ generate_random() {
 }
 
 # ==== Interactive Inputs ====
+echo
+echo "Welcome to Simple API Server, Please set the configuration below: "
+echo
 read -p "Postgres username [default: random]: " PGUSER
 read -p "Postgres password [default: random]: " PGPASSWORD
 read -p "Postgres database [default: random]: " PGDATABASE
@@ -26,6 +29,7 @@ API_PORT=${API_PORT:-3000}
 
 # ==== Directory Setup ====
 mkdir -p api
+mkdir -p pgadmin
 
 # ==== .env ====
 cat <<EOF > api/.env
@@ -115,6 +119,25 @@ app.listen(PORT, () => {
 });
 EOF
 
+# ==== pgadmin servers.json ====
+cat <<EOF > pgadmin/servers.json
+{
+  "Servers": {
+    "1": {
+      "Name": "API DB Postgres",
+      "Group": "Servers",
+      "Host": "pg-db",
+      "Port": 5432,
+      "MaintenanceDB": "$PGDATABASE",
+      "Username": "$PGUSER",
+      "Password": "$PGPASSWORD",
+      "SSLMode": "prefer",
+    }
+  }
+}
+EOF
+
+
 # ==== docker-compose.yml ====
 cat <<EOF > docker-compose.yml
 version: '3.8'
@@ -144,6 +167,8 @@ services:
       - "3001:80"
     depends_on:
       - postgres
+    volumes:
+      - ./pgadmin/servers.json:/pgadmin4/servers.json      
 
   api:
     build: ./api
