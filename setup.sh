@@ -131,7 +131,7 @@ cat <<EOF > pgadmin/servers.json
       "MaintenanceDB": "$PGDATABASE",
       "Username": "$PGUSER",
       "Password": "$PGPASSWORD",
-      "SSLMode": "prefer",
+      "SSLMode": "prefer"
     }
   }
 }
