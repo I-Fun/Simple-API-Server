@@ -137,6 +137,10 @@ cat <<EOF > pgadmin/servers.json
 }
 EOF
 
+cat <<EOF > pgadmin/.pgpass
+pg-db:5432:$PGDATABASE:$PGUSER:$PGPASSWORD
+EOF
+
 
 # ==== docker-compose.yml ====
 cat <<EOF > docker-compose.yml
@@ -145,7 +149,7 @@ version: '3.8'
 services:
   postgres:
     image: postgres:16
-    container_name: pg-db
+    container_name: pgdb
     restart: unless-stopped
     environment:
       POSTGRES_USER: $PGUSER
@@ -168,7 +172,8 @@ services:
     depends_on:
       - postgres
     volumes:
-      - ./pgadmin/servers.json:/pgadmin4/servers.json      
+      - ./pgadmin/servers.json:/pgadmin4/servers.json
+      - ./pgadmin/.pgpass:/var/lib/pgadmin/.pgpass
 
   api:
     build: ./api
@@ -193,11 +198,11 @@ echo "--------------------------------------"
 echo "PostgreSQL Username: $PGUSER"
 echo "PostgreSQL Password: $PGPASSWORD"
 echo "PostgreSQL Database: $PGDATABASE"
-echo "PGAdmin Email:       $PGADMIN_DEFAULT_EMAIL"
-echo "PGAdmin Password:    $PGADMIN_DEFAULT_PASSWORD"
-echo "API Username:        $API_USER"
-echo "API Password:        $API_PASS"
-echo "API Exposed Port:    $API_PORT"
+echo "PGAdmin Email      : $PGADMIN_DEFAULT_EMAIL"
+echo "PGAdmin Password   : $PGADMIN_DEFAULT_PASSWORD"
+echo "API Username       : $API_USER"
+echo "API Password       : $API_PASS"
+echo "API Exposed Port   : $API_PORT"
 echo "--------------------------------------"
 echo "⚠️  Please copy and store these credentials before continuing!"
 echo
