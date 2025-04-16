@@ -167,6 +167,7 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: $PGADMIN_DEFAULT_EMAIL
       PGADMIN_DEFAULT_PASSWORD: $PGADMIN_DEFAULT_PASSWORD
+      PGPASSFILE: /var/lib/pgadmin/.pgpass
     ports:
       - "3001:80"
     depends_on:
