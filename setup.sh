@@ -149,7 +149,7 @@ version: '3.8'
 services:
   postgres:
     image: postgres:16
-    container_name: pgdb
+    container_name: pg-db
     restart: unless-stopped
     environment:
       POSTGRES_USER: $PGUSER
